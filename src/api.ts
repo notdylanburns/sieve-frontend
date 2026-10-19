@@ -90,6 +90,15 @@ export async function login(
   });
 }
 
+export async function getProviders(): Promise<{ google: boolean }> {
+  return request("/api/auth/providers", { redirectOnUnauthorized: false });
+}
+
+/** A page navigation, not a fetch: it leaves for Google's sign-in page. */
+export function googleSignInUrl(next: string) {
+  return `/auth/google?next=${encodeURIComponent(next)}`;
+}
+
 export async function logout(): Promise<void> {
   await request<void>("/api/auth/logout", {
     method: "POST",

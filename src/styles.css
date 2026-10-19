@@ -1099,6 +1099,29 @@ tbody tr:hover {
   padding-right: 14px;
 }
 
+.login-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--border);
+}
+
 .login-brand {
   display: flex;
   align-items: center;
