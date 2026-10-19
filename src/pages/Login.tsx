@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { login, UnauthorizedError } from "../api";
+import { getProviders, googleSignInUrl, login, UnauthorizedError } from "../api";
 import { SieveMark } from "../components/Icons";
 
 // Only follow same-site paths, so a crafted link can't bounce users elsewhere after login.
@@ -14,7 +14,16 @@ export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    params.get("error") === "google" ? "Signing in with Google failed. Please try again." : null,
+  );
+  const [google, setGoogle] = useState(false);
+
+  useEffect(() => {
+    getProviders()
+      .then((providers) => setGoogle(providers.google))
+      .catch(() => setGoogle(false));
+  }, []);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -50,6 +59,18 @@ export function Login() {
         <h1>Sign in</h1>
 
         {error && <div className="alert alert-error">{error}</div>}
+
+        {google && (
+          <>
+            <a
+              className="button button-secondary login-google"
+              href={googleSignInUrl(safeNext(params.get("next")))}
+            >
+              Sign in with Google
+            </a>
+            <div className="login-divider">or</div>
+          </>
+        )}
 
         <label className="field">
           <span>Username</span>
